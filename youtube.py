@@ -25,7 +25,9 @@ def download_playlist(playlist_url, output_dir):
         # Download the playlist
         playlist = Playlist(playlist_url)
         for video in playlist.videos:
-            video.streams.get_highest_resolution().download(output_path=output_dir)
+            output_file_path = os.path.join(output_dir, f"{video.title}.mp4")
+            if not os.path.isfile(output_file_path):
+                video.streams.get_highest_resolution().download(output_path=output_dir)
         print("Playlist downloaded successfully!")
     except Exception as e:
         print(f"Error downloading playlist: {str(e)}")
@@ -42,8 +44,9 @@ if __name__ == "__main__":
             sys.exit(1)
 
         output_dir = Prompt.ask(
-            "Enter output directory:", default="./Downloads/Youtube Videos"
+            "Enter output directory:", default="~/Downloads/Youtube Videos"
         )
+        output_dir = os.path.expanduser(output_dir)
 
         if mode == "video":
             download_video(url, output_dir)
