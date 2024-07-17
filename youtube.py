@@ -6,10 +6,8 @@ from rich.prompt import Prompt
 
 def download_video(video_url, output_dir):
     try:
-        # Create the output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
 
-        # Download the video
         video = YouTube(video_url)
         video.streams.get_highest_resolution().download(output_path=output_dir)
         print("Video downloaded successfully!")
@@ -19,11 +17,11 @@ def download_video(video_url, output_dir):
 
 def download_playlist(playlist_url, output_dir):
     try:
-        # Create the output directory if it doesn't exist
-        os.makedirs(output_dir, exist_ok=True)
-
-        # Download the playlist
         playlist = Playlist(playlist_url)
+        playlist_folder = os.path.join(output_dir, playlist.title)
+
+        os.makedirs(playlist_folder, exist_ok=True)
+        
         for video in playlist.videos:
             output_file_path = os.path.join(output_dir, f"{video.title}.mp4")
             if not os.path.isfile(output_file_path):
